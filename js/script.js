@@ -80,37 +80,6 @@ function parseAndRollDice(controlIdToRead) {
     //display the result adding a line for each roll result
     showDialog('Damage Roll', 'You rolled a ' + sum + ' for damage.' + '<br>' + rollResults.join('\n'));
 
-
-
-    /*
-    // Variable to store the final sum
-    var sum = 0;
-    
-    // Iterate over each dice expression
-    for (var i = 0; i < diceExpressions.length; i++) {
-      var expression = diceExpressions[i];
-      
-      // Split the expression into count and size of dice, and the modifier
-      var parts = expression.split('d');
-      var count = parseInt(parts[0], 10);
-      var sizeAndModifier = parts[1].split('+');
-      var size = parseInt(sizeAndModifier[0], 10);
-      var modifier = parseInt(sizeAndModifier[1], 10);
-      
-      // Roll the dice 'count' times and add the result to the sum
-      for (var j = 0; j < count; j++) {
-        sum += rollDice(size, modifier);
-      }
-    }
-
-    console.log(sum);
-    event.preventDefault();
-    //display the result
-    showDialog('Damage Roll', 'You rolled a ' + sum + ' for damage.');
-    */
-    
-    // Return the final sum
-    //return sum;
   }
 
 
@@ -130,8 +99,17 @@ function rollAttack(controlIdToRead) {
 
         var roll = rollDice(20, parseInt(inputValue));
 
-        //display the result
-        showDialog('Attack Roll', 'You rolled a ' + roll + ' for attack.');
+        //display the result. If the result - the input value is 20, then it is a critical hit. If it is 1, then it is a critical miss
+        if(roll - parseInt(inputValue) == 20){
+            showDialog('Attack Roll', 'You rolled a total of ' + roll + ' for attack. Critical Hit!');
+        }
+        else if(roll - parseInt(inputValue) == 1){
+            showDialog('Attack Roll', 'You rolled a total of ' + roll + ' for attack. Critical Miss!');
+        }
+        else
+        {   
+            showDialog('Attack Roll', 'You rolled a total of  ' + roll + ' for attack.');
+        }
 
     }
 
