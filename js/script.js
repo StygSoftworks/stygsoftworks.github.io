@@ -297,7 +297,7 @@ $(document).ready(function() {
 
                 //inputs for Weapon Name	Weapon Type	Attack Bonus	Attack Mod	Weapon Damage	Action
                 var actionRollHtmlInput = `<button class="rollAttack ui-button go" onclick="rollAttackFnc('${wepTableGuiId}-wepDamage','${wepTableGuiId}-attackBonus')">Roll</button>`;
-                var weaponNameHtmlInput = `<input type="text" class="wepLookup ui-widget-input wide" id="${wepTableGuiId}-wepName" name="${wepTableGuiId}-wepName" value="">`;
+                var weaponNameHtmlInput = `<input type="text" class="wepLookup ui-widget-input wide" id="${wepTableGuiId}-wepName" name="${wepTableGuiId}-wepName" value="" autocorrect="off" autocapitalize="none">`;
                 var weaponTypeHtmlInput = `<label class="ui-widget-input" id="${wepTableGuiId}-wepType" name="${wepTableGuiId}-wepType" value="">`;
                 var attackBonusHtmlInput = `<input type="text" class="intInput ui-widget-input" id="${wepTableGuiId}-attackBonus" name="${wepTableGuiId}-attackBonus" value="0">`;
                 var weaponDamageHtmlInput = `<input type="text" class="ui-widget-input" id="${wepTableGuiId}-wepDamage" name="${wepTableGuiId}-wepDamage" value="0">`;
@@ -313,6 +313,11 @@ $(document).ready(function() {
 
                 // Add the row to the table
                 $table.row.add(arrayOfData).draw();
+
+
+                $('.wepLookup').on('touchstart', function() {
+                    $(this).autocomplete('search');
+                  });
 
                 $(".wepLookup").autocomplete({
                     source: function(request, response) {
@@ -375,10 +380,6 @@ $(document).ready(function() {
                             $(this).closest('tr').find('input[id$="-attackBonus"]').val(parseInt(babValue) + parseInt(strengthModifier));
                             $(this).closest('tr').find('input[id$="-wepDamage"]').val(weaponSelected[0].damage + ' + ' +strengthModifier);
                         }
-
-
-
-
                       }
                   });
 

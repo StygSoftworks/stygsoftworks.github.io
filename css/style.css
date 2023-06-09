@@ -90,3 +90,7 @@ body {
     background-color: yellow;
     color: black;
 }
+
+.ui-autocomplete {
+    z-index: 9999;
+  }
