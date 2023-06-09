@@ -35,6 +35,16 @@ body {
     padding: 20px;
 }
 
+/**/
+
+
+.cFont{
+    font-family: 'Old London Text', Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
 @font-face {
     font-family: 'Old London Text';
     src: url('../OldLondon.ttf') format('truetype'); /* Replace 'oldengl.ttf' with the actual filename and extension of the font file */
@@ -42,4 +52,41 @@ body {
     font-style: normal;
 }
 
-/**/
+
+.ui-button-green {
+    background-color: green;
+    color: white;
+  }
+
+/*ui-widget-input*/
+
+.ui-widget-input {
+
+    min-width: 20px;
+    max-width: 75px;
+}
+
+.ui-widget-input.wide {
+    min-width: 20px;
+    max-width: 125px;
+}
+
+.ui-button.deletebtn {
+    background-color: red;
+    color: white;
+}
+.ui-button.deletebtn:hover, .ui-button.deletebtn:focus {
+    background-color: maroon;
+    color: white;
+}
+
+
+.ui-button.go {
+    background-color: green;
+    color: white;
+}
+
+.ui-button.go:hover, .ui-button.go:focus {
+    background-color: yellow;
+    color: black;
+}
