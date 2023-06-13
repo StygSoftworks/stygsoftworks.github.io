@@ -131,10 +131,26 @@ $(document).ready(function() {
 
 function loadFieldsFromCookie() {
   // Get cookie value
-  var cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)characterFields\s*\=\s*([^;]*).*$)|^.*$/, '$1');
+  //var cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)characterFields\s*\=\s*([^;]*).*$)|^.*$/, '$1');
 
+
+
+  var cookieValue = document.cookie.split(';');
+  var characterFieldsCookie = null;
+  for (var i = 0; i < cookieValue.length; i++) {
+    var cookie = cookieValue[i].trim();
+    if (cookie.indexOf('characterFields=') === 0) {
+      characterFieldsCookie = cookie;
+      break;
+    }
+  }
+
+  var fieldsJson = decodeURIComponent(characterFieldsCookie.split('=')[1]);
+
+  var fields = JSON.parse(fieldsJson);
+  
   // Parse cookie value
-  var fields = JSON.parse(cookieValue);
+  //var fields = JSON.parse(cookieValue);
 
   // Load character info
   $('#name').val(fields.name);
