@@ -125,7 +125,13 @@ $(document).ready(function() {
   
     // Save fields to cookie
     var jsonFields = JSON.stringify(fields);
-    document.cookie = 'characterFields=' + jsonFields;
+
+    // URL-encode the fields JSON string
+    var encodedFieldsJson = encodeURIComponent(jsonFields);
+
+
+    //document.cookie = 'characterFields=' + jsonFields;
+    document.cookie = 'characterFields=' + encodedFieldsJson;
   }
 
 
