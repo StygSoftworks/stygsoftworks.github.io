@@ -289,7 +289,7 @@ function loadFieldsFromCookie() {
   $.each(fields.weapons, function(index, weapon) {
     var row = $('<tr>');
     row.append($('<td>').append($('<input>').attr('type', 'text').addClass('form-control weaponName').val(weapon.weaponName)));
-    row.append($('<td>').append($('<input>').attr('type', 'number').addClass('form-control attackBonus').val(weapon.attackBonus)));
+    row.append($('<td>').append($('<input>').attr('type', 'text').addClass('form-control attackBonus').val(weapon.attackBonus)));
     row.append($('<td>').append($('<input>').attr('type', 'text').addClass('form-control damage').val(weapon.damage)));
     row.append($('<td>').append($('<input>').attr('type', 'text').addClass('form-control weaponType').val(weapon.weaponType)));
     row.append($('<td>').append($('<input>').attr('type', 'text').addClass('form-control range').val(weapon.range)));
