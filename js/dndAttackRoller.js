@@ -71,7 +71,7 @@ function rollAttack(button) {
   var evaluatedDamage = evaluateDamageExpression(damage);
 
   var attackRoll = Math.floor(Math.random() * 20) + 1;
-  var attackTotal = attackRoll + parseInt(eval(attackBonus));
+  var attackTotal = attackRoll+ eval(attackBonus);
 
   //alert("Attack Roll: " + attackRoll+ "\nAttack Total:" + attackTotal + "\nDamage: " + evaluatedDamage);
 
@@ -89,7 +89,7 @@ function evaluateDamageExpression(expression) {
   var totalOutput = '';
   var rollingTotal = 0;
 
-  console.log(values);
+  //console.log(values);
 
   //for each value in the array, if it's a dice expression, roll it
   for (var i = 0; i < values.length; i++) {
@@ -174,7 +174,7 @@ function rollDiceExpression(diceExpression) {
 function addRow() {
   var newRow = '<tr>' +
     '<td><input type="text" class="form-control" id="weaponName"></td>' +
-    '<td><input type="number" class="form-control" id="attackBonus"></td>' +
+    '<td><input type="text" class="form-control" id="attackBonus"></td>' +
     '<td><input type="text" class="form-control" id="damage"></td>' +
     '<td><input type="text" class="form-control" id="weaponType"></td>' +
     '<td><input type="text" class="form-control" id="range"></td>' +
