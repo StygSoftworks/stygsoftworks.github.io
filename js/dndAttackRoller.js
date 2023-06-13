@@ -93,83 +93,118 @@ $(document).ready(function() {
 
 
 
-// Function to save all the fields to a cookie
-function saveFieldsToCookie() {
-  // Get all the field values
-  var name = $('#name').val();
-  var baseAttackBonus = $('#baseAttackBonus').val();
-  var currentHP = $('#currentHP').val();
-  var maxHP = $('#maxHP').val();
-  var fort = $('#fort').val();
-  var reflex = $('#reflex').val();
-  var will = $('#will').val();
-  var strengthMod = $('#strengthMod').val();
-  var dexMod = $('#dexMod').val();
-  var weaponName = $('#weaponName').val();
-  var attackBonus = $('#attackBonus').val();
-  var damage = $('#damage').val();
-  var weaponType = $('#weaponType').val();
-  var range = $('#range').val();
+  function createCookie(name, value, days) {
+    var expires = '';
+  
+    if (days) {
+      var date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+      expires = '; expires=' + date.toUTCString();
+    }
+  
+    document.cookie = name + '=' + encodeURIComponent(value) + expires + '; path=/';
+  }
 
-  // Create an object to store the field values
-  var fields = {
-    name: name,
-    baseAttackBonus: baseAttackBonus,
-    currentHP: currentHP,
-    maxHP: maxHP,
-    fort: fort,
-    reflex: reflex,
-    will: will,
-    strengthMod: strengthMod,
-    dexMod: dexMod,
-    weaponName: weaponName,
-    attackBonus: attackBonus,
-    damage: damage,
-    weaponType: weaponType,
-    range: range
-  };
 
-  // Convert the fields object to JSON string
-  var fieldsJson = JSON.stringify(fields);
+  function saveFieldsToCookie() {
+    var fields = {};
+  
+    // Save character info
+    fields.name = $('#name').val();
+    fields.baseAttackBonus = $('#baseAttackBonus').val();
+    fields.currentHP = $('#currentHP').val();
+    fields.maxHP = $('#maxHP').val();
+  
+    // Save saving throws
+    fields.fort = $('#fort').val();
+    fields.reflex = $('#reflex').val();
+    fields.will = $('#will').val();
+  
+    // Save modifiers
+    fields.strengthMod = $('#strengthMod').val();
+    fields.dexMod = $('#dexMod').val();
+  
+    // Save weapons
+    fields.weapons = [];
+  
+    $('#weaponsTable tbody tr').each(function() {
+      var weapon = {};
+      weapon.name = $(this).find('#weaponName').val();
+      weapon.attackBonus = $(this).find('#attackBonus').val();
+      weapon.damage = $(this).find('#damage').val();
+      weapon.weaponType = $(this).find('#weaponType').val();
+      weapon.range = $(this).find('#range').val();
+      fields.weapons.push(weapon);
+    });
+  
+    // Save fields to cookie
+    var jsonFields = JSON.stringify(fields);
 
-  // Save the fields to a cookie
-  document.cookie = 'characterFields=' + encodeURIComponent(fieldsJson);
-}
 
-// Function to load all the fields from the cookie
-function loadFieldsFromCookie() {
-  // Get the cookie value
-  var cookies = document.cookie.split(';');
-  var characterFieldsCookie = null;
-  for (var i = 0; i < cookies.length; i++) {
-    var cookie = cookies[i].trim();
-    if (cookie.indexOf('characterFields=') === 0) {
-      characterFieldsCookie = cookie;
-      break;
+    // Store fields in a cookie
+    createCookie('characterFields', jsonFields, 999); // Expires after 7 days
+
+
+    //log the cookie
+    console.log(jsonFields);
+
+
+    
+
+  }
+
+
+  function loadFieldsFromCookie() {
+    // Get cookie value
+    var cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)characterFields\s*\=\s*([^;]*).*$)|^.*$/, '$1');
+  
+    console.log(document.cookie);
+    console.log(cookieValue);
+
+    if (cookieValue) {
+      try {
+        // Parse cookie value
+        var fields = JSON.parse(cookieValue);
+  
+        // Load character info
+        $('#name').val(fields.name);
+        $('#baseAttackBonus').val(fields.baseAttackBonus);
+        $('#currentHP').val(fields.currentHP);
+        $('#maxHP').val(fields.maxHP);
+  
+        // Load saving throws
+        $('#fort').val(fields.fort);
+        $('#reflex').val(fields.reflex);
+        $('#will').val(fields.will);
+  
+        // Load modifiers
+        $('#strengthMod').val(fields.strengthMod);
+        $('#dexMod').val(fields.dexMod);
+  
+        // Load weapons
+        $('#weaponsTable tbody').empty();
+  
+        for (var i = 0; i < fields.weapons.length; i++) {
+          var weapon = fields.weapons[i];
+          var newRow = '<tr>' +
+            '<td><input type="text" class="form-control" id="weaponName" value="' + weapon.name + '"></td>' +
+            '<td><input type="number" class="form-control" id="attackBonus" value="' + weapon.attackBonus + '"></td>' +
+            '<td><input type="text" class="form-control" id="damage" value="' + weapon.damage + '"></td>' +
+            '<td><input type="text" class="form-control" id="weaponType" value="' + weapon.weaponType + '"></td>' +
+            '<td><input type="text" class="form-control" id="range" value="' + weapon.range + '"></td>' +
+            '<td>' +
+            '<button class="btn btn-primary" onclick="rollAttack(this)">Roll Attack</button>' +
+            '<button class="btn btn-danger" onclick="deleteRow(this)">Delete</button>' +
+            '</td>' +
+            '</tr>';
+  
+          $('#weaponsTable tbody').append(newRow);
+        }
+      } catch (error) {
+        // Handle invalid JSON or parsing error
+        console.error('Error parsing JSON from cookie:', error);
+      }
     }
   }
-
-  // If the cookie is found, load the fields
-  if (characterFieldsCookie) {
-    var fieldsJson = decodeURIComponent(characterFieldsCookie.split('=')[1]);
-    var fields = JSON.parse(fieldsJson);
-
-    // Set the field values
-    $('#name').val(fields.name);
-    $('#baseAttackBonus').val(fields.baseAttackBonus);
-    $('#currentHP').val(fields.currentHP);
-    $('#maxHP').val(fields.maxHP);
-    $('#fort').val(fields.fort);
-    $('#reflex').val(fields.reflex);
-    $('#will').val(fields.will);
-    $('#strengthMod').val(fields.strengthMod);
-    $('#dexMod').val(fields.dexMod);
-    $('#weaponName').val(fields.weaponName);
-    $('#attackBonus').val(fields.attackBonus);
-    $('#damage').val(fields.damage);
-    $('#weaponType').val(fields.weaponType);
-    $('#range').val(fields.range);
-  }
-}
-
+  
   
