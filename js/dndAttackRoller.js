@@ -92,20 +92,6 @@ $(document).ready(function() {
   }
 
 
-
-  function createCookie(name, value, days) {
-    var expires = '';
-  
-    if (days) {
-      var date = new Date();
-      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-      expires = '; expires=' + date.toUTCString();
-    }
-  
-    document.cookie = name + '=' + encodeURIComponent(value) + expires + '; path=/';
-  }
-
-
   function saveFieldsToCookie() {
     var fields = {};
   
@@ -139,72 +125,49 @@ $(document).ready(function() {
   
     // Save fields to cookie
     var jsonFields = JSON.stringify(fields);
-
-
-    // Store fields in a cookie
-    createCookie('characterFields', jsonFields, 999); // Expires after 7 days
-
-
-    //log the cookie
-    console.log(jsonFields);
-
-
-    
-
+    document.cookie = 'characterFields=' + jsonFields;
   }
 
 
-  function loadFieldsFromCookie() {
-    // Get cookie value
-    var cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)characterFields\s*\=\s*([^;]*).*$)|^.*$/, '$1');
-  
-    console.log(document.cookie);
-    console.log(cookieValue);
+function loadFieldsFromCookie() {
+  // Get cookie value
+  var cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)characterFields\s*\=\s*([^;]*).*$)|^.*$/, '$1');
 
-    if (cookieValue) {
-      try {
-        // Parse cookie value
-        var fields = JSON.parse(cookieValue);
-  
-        // Load character info
-        $('#name').val(fields.name);
-        $('#baseAttackBonus').val(fields.baseAttackBonus);
-        $('#currentHP').val(fields.currentHP);
-        $('#maxHP').val(fields.maxHP);
-  
-        // Load saving throws
-        $('#fort').val(fields.fort);
-        $('#reflex').val(fields.reflex);
-        $('#will').val(fields.will);
-  
-        // Load modifiers
-        $('#strengthMod').val(fields.strengthMod);
-        $('#dexMod').val(fields.dexMod);
-  
-        // Load weapons
-        $('#weaponsTable tbody').empty();
-  
-        for (var i = 0; i < fields.weapons.length; i++) {
-          var weapon = fields.weapons[i];
-          var newRow = '<tr>' +
-            '<td><input type="text" class="form-control" id="weaponName" value="' + weapon.name + '"></td>' +
-            '<td><input type="number" class="form-control" id="attackBonus" value="' + weapon.attackBonus + '"></td>' +
-            '<td><input type="text" class="form-control" id="damage" value="' + weapon.damage + '"></td>' +
-            '<td><input type="text" class="form-control" id="weaponType" value="' + weapon.weaponType + '"></td>' +
-            '<td><input type="text" class="form-control" id="range" value="' + weapon.range + '"></td>' +
-            '<td>' +
-            '<button class="btn btn-primary" onclick="rollAttack(this)">Roll Attack</button>' +
-            '<button class="btn btn-danger" onclick="deleteRow(this)">Delete</button>' +
-            '</td>' +
-            '</tr>';
-  
-          $('#weaponsTable tbody').append(newRow);
-        }
-      } catch (error) {
-        // Handle invalid JSON or parsing error
-        console.error('Error parsing JSON from cookie:', error);
-      }
-    }
+  // Parse cookie value
+  var fields = JSON.parse(cookieValue);
+
+  // Load character info
+  $('#name').val(fields.name);
+  $('#baseAttackBonus').val(fields.baseAttackBonus);
+  $('#currentHP').val(fields.currentHP);
+  $('#maxHP').val(fields.maxHP);
+
+  // Load saving throws
+  $('#fort').val(fields.fort);
+  $('#reflex').val(fields.reflex);
+  $('#will').val(fields.will);
+
+  // Load modifiers
+  $('#strengthMod').val(fields.strengthMod);
+  $('#dexMod').val(fields.dexMod);
+
+  // Load weapons
+  $('#weaponsTable tbody').empty();
+
+  for (var i = 0; i < fields.weapons.length; i++) {
+    var weapon = fields.weapons[i];
+    var newRow = '<tr>' +
+      '<td><input type="text" class="form-control" id="weaponName" value="' + weapon.name + '"></td>' +
+      '<td><input type="number" class="form-control" id="attackBonus" value="' + weapon.attackBonus + '"></td>' +
+      '<td><input type="text" class="form-control" id="damage" value="' + weapon.damage + '"></td>' +
+      '<td><input type="text" class="form-control" id="weaponType" value="' + weapon.weaponType + '"></td>' +
+      '<td><input type="text" class="form-control" id="range" value="' + weapon.range + '"></td>' +
+      '<td>' +
+      '<button class="btn btn-primary" onclick="rollAttack(this)">Roll Attack</button>' +
+      '<button class="btn btn-danger" onclick="deleteRow(this)">Delete</button>' +
+      '</td>' +
+      '</tr>';
+
+    $('#weaponsTable tbody').append(newRow);
   }
-  
-  
+}
