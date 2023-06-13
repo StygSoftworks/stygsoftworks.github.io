@@ -71,7 +71,7 @@ function rollAttack(button) {
   var evaluatedDamage = evaluateDamageExpression(damage);
 
   var attackRoll = Math.floor(Math.random() * 20) + 1;
-  var attackTotal = Math.floor(Math.random() * 20) + 1 + parseInt(eval(attackBonus));
+  var attackTotal = attackRoll + parseInt(eval(attackBonus));
 
   //alert("Attack Roll: " + attackRoll+ "\nAttack Total:" + attackTotal + "\nDamage: " + evaluatedDamage);
 
