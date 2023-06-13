@@ -3,6 +3,41 @@ $(document).ready(function() {
   $('#weaponsTable').DataTable();
 });
 
+function showModal(title, body) {
+  // Create the modal dialog HTML
+  var modalHTML = `
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">${title}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            ${body}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Append the modal HTML to the body
+  $('body').append(modalHTML);
+
+  // Show the modal
+  $('#myModal').modal('show');
+
+  // Remove the modal from the DOM after it's hidden
+  $('#myModal').on('hidden.bs.modal', function() {
+    $(this).remove();
+  });
+}
+
 function rollDice(button) {
   var row = $(button).closest('tr');
   var fort = row.find('#fort').val();
@@ -35,25 +70,88 @@ function rollAttack(button) {
   // Evaluate damage expression
   var evaluatedDamage = evaluateDamageExpression(damage);
 
-  var attackRoll = Math.floor(Math.random() * 20) + 1 + parseInt(attackBonus);
+  var attackRoll = Math.floor(Math.random() * 20) + 1;
+  var attackTotal = Math.floor(Math.random() * 20) + 1 + parseInt(eval(attackBonus));
 
-  alert("Attack Roll: " + attackRoll + "\nDamage: " + evaluatedDamage);
+  //alert("Attack Roll: " + attackRoll+ "\nAttack Total:" + attackTotal + "\nDamage: " + evaluatedDamage);
+
+  showModal('Attack Roll', 'Attack Roll: ' + attackRoll + '<br>Attack Total: <b>' + attackTotal + '</b><br>Damage: ' + evaluatedDamage);
+
+
 }
 
 function evaluateDamageExpression(expression) {
+
+  //convert expressions to an array
+  var values = splitTextToArrayByMathSymbols(expression);
+
+
+  var totalOutput = '';
+  var rollingTotal = 0;
+
+  console.log(values);
+
+  //for each value in the array, if it's a dice expression, roll it
+  for (var i = 0; i < values.length; i++) {
+
+ 
+    var currentValue = 0;
+    
+    //determine if the value is a dice expression
+    if (values[i].includes('d')) 
+    {
+      currentValue = rollDiceExpression(values[i]);
+
+      //if there is a negative sign in front of the dice expression, make the value negative
+      if (values[i].includes('-'))
+      {
+        currentValue = currentValue * -1;
+      }
+
+      totalOutput += 'Roll for ' + values[i] + ' = ' + currentValue + '<br>';
+
+    }
+    else
+    {
+      currentValue = parseInt(values[i]);
+
+      totalOutput += 'Modifier ' + values[i] +'<br>';
+    }
+
+    
+    
+    rollingTotal += currentValue;
+
+
+
+  }
+
+  return 'The total damage is <b>' + rollingTotal + '</b><br><br>Details<br>' + totalOutput;
+
+
+
+
+  /*
   var diceRegex = /(\d+d\d+([\+\-]\d+)?)/g;
   var matches = expression.match(diceRegex);
   var result = '';
 
+  var totalOutput = '';
+
   if (matches) {
     for (var i = 0; i < matches.length; i++) {
       var dice = matches[i];
+
+
+
+
       var rollResult = rollDiceExpression(dice);
       result += dice + ': ' + rollResult + ' ';
     }
   }
 
   return result.trim();
+  */
 }
 
 function rollDiceExpression(diceExpression) {
@@ -67,6 +165,8 @@ function rollDiceExpression(diceExpression) {
   for (var i = 0; i < quantity; i++) {
     total += Math.floor(Math.random() * sides) + 1;
   }
+
+  console.log('Rolling ' + quantity + 'd' + sides + ' + ' + modifier + ' = ' + eval(total + modifier));
 
   return total + modifier;
 }
@@ -203,4 +303,30 @@ function loadFieldsFromCookie() {
     ));
     $('#weaponsTable tbody').append(row);
   });
+}
+
+
+// function to split the text by math symbols
+function splitTextToArrayByMathSymbols(text) {
+  // Split the text by "+" and "-" symbols
+  var splitArray = text.split(/([+-])/);
+
+  // Remove empty strings and "+" symbols from the split array
+  splitArray = splitArray.filter(function (value) {
+    return value.trim() !== '' && value.trim() !== '+';
+  });
+
+  // Combine the "-" sign with the corresponding value
+  var resultArray = [];
+  for (var i = 0; i < splitArray.length; i++) {
+    var value = splitArray[i].trim();
+    if (value === "-" && i + 1 < splitArray.length) {
+      resultArray.push(value + splitArray[i + 1]);
+      i++; // Skip the next value as it has been combined with "-"
+    } else {
+      resultArray.push(value);
+    }
+  }
+
+  return resultArray;
 }
