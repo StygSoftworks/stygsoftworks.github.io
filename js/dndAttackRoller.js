@@ -3,7 +3,7 @@ $(document).ready(function() {
   $('#weaponsTable').DataTable();
 
   
-  loadFieldsFromCookie();
+  //loadFieldsFromCookie();
 
   //add a row
   addRow(true);
