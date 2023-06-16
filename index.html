@@ -4,6 +4,8 @@
     <title>Form</title>
     <link rel="stylesheet" type="text/css" href="css/stackpath.bootstrapcdn.com_bootstrap_4.3.1_css_bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/cdn.datatables.net_1.10.19_css_jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="css/code.jquery.com_ui_1.13.1_themes_smoothness_jquery-ui.css">
+
 </head>
 <body>
 
@@ -26,15 +28,15 @@
               <div class="form-row">
                 <div class="form-group col-md-4">
                   <label for="baseAttackBonus">Base Attack Bonus:</label>
-                  <input type="number" class="form-control" id="baseAttackBonus">
+                  <input type="number" class="form-control" value="0"  id="baseAttackBonus">
                 </div>
                 <div class="form-group col-md-4">
                   <label for="currentHP">Current HP:</label>
-                  <input type="number" class="form-control" id="currentHP">
+                  <input type="number" class="form-control"  value="0"   id="currentHP">
                 </div>
                 <div class="form-group col-md-4">
                   <label for="maxHP">Max HP:</label>
-                  <input type="number" class="form-control" id="maxHP">
+                  <input type="number" class="form-control"  value="0"  id="maxHP">
                 </div>
               </div>
             </form>
@@ -60,11 +62,11 @@
               </thead>
               <tbody>
                 <tr>
-                  <td><input type="number" class="form-control" id="fort"></td>
-                  <td><input type="number" class="form-control" id="reflex"></td>
-                  <td><input type="number" class="form-control" id="will"></td>
+                  <td><input type="text" class="form-control"  value="0"  id="fort"></td>
+                  <td><input type="text" class="form-control"  value="0" id="reflex"></td>
+                  <td><input type="text" class="form-control"  value="0" id="will"></td>
                   <td>
-                    <button class="btn btn-primary" onclick="rollDice(this)">Roll</button>
+                    <button class="btn btn-primary" onclick="rollSaves(this)">Roll</button>
                   </td>
                 </tr>
               </tbody>
@@ -89,8 +91,8 @@
               </thead>
               <tbody>
                 <tr>
-                  <td><input type="number" class="form-control" id="strengthMod" onchange="toggleModifiersPanel()"></td>
-                  <td><input type="number" class="form-control" id="dexMod" onchange="toggleModifiersPanel()"></td>
+                  <td><input type="text" class="form-control" id="strengthMod" value="0" onchange="toggleModifiersPanel()"></td>
+                  <td><input type="text" class="form-control" id="dexMod" value="0" onchange="toggleModifiersPanel()"></td>
                 </tr>
               </tbody>
             </table>
@@ -100,10 +102,16 @@
         <div class="card mt-4">
           <div class="card-header">
             <h3>Weapons</h3>
+
+
+
             <button class="btn btn-link float-right" type="button" data-toggle="collapse" data-target="#weaponsPanel">
               Toggle
             </button>
           </div>
+
+          
+
           <div class="card-body collapse show" id="weaponsPanel">
             <table class="table table-bordered" id="weaponsTable">
               <thead>
@@ -111,29 +119,38 @@
                   <th>Weapon Name</th>
                   <th>Attack Bonus</th>
                   <th>Damage</th>
+                  <th>Damage Bonus</th>
                   <th>Weapon Type</th>
-                  <th>Range</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td><input type="text" class="form-control" id="weaponName"></td>
-                  <td><input type="number" class="form-control" id="attackBonus"></td>
-                  <td><input type="text" class="form-control" id="damage"></td>
-                  <td><input type="text" class="form-control" id="weaponType"></td>
-                  <td><input type="text" class="form-control" id="range"></td>
+
+
+                
+                <!-- <tr>
+                  <td><input type="text" class="form-control" id="weaponName" value="Morningstar"></td>
+                  <td><input type="text" class="form-control" id="attackBonus" value="0"></td>
+                  <td><input type="text" class="form-control" id="damage" value="1d6"></td>
+                  <td><input type="text" class="form-control" id="damageBonus"></td>
+                  <td>
+                    <select class="form-control" id="weaponType">
+                      <option value="melee">Melee</option>
+                      <option value="ranged">Ranged</option>
+                      <option value="natural">Natural</option>
+                    </select>
+                  </td>
+                  
                   <td>
                     <button class="btn btn-primary" onclick="rollAttack(this)">Roll Attack</button>
                     <button class="btn btn-danger" onclick="deleteRow(this)">Delete</button>
                   </td>
-                </tr>
+                </tr>  -->
               </tbody>
             </table>
-            <button class="btn btn-success mt-2" onclick="addRow()">Add Weapon</button>
+            <button class="btn btn-success mt-2" onclick="addRow(true)">Add Weapon</button>
           </div>
         </div>
-
 
         <!-- Save and load cookie buttons -->
         <div class="card mt-4">
@@ -150,10 +167,12 @@
 
       </div>
 
-    <script type="text/javascript" src="js/code.jquery.com_jquery-3.3.1.slim.min.js"></script>
+    <script type="text/javascript" src="js/code.jquery.com_jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="js/cdnjs.cloudflare.com_ajax_libs_popper.js_1.14.7_umd_popper.min.js"></script>
     <script type="text/javascript" src="js/stackpath.bootstrapcdn.com_bootstrap_4.3.1_js_bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/code.jquery.com_ui_1.13.1_jquery-ui.min.js"></script>
     <script type="text/javascript" src="js/cdn.datatables.net_1.10.19_js_jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="js/weaponData.js"></script>
     <script type="text/javascript" src="js/dndAttackRoller.js"></script>
 </body>
 </html>
